@@ -228,19 +228,18 @@ include $(ATMOSPHERE_SUB_ARCH_MAKE_DIR)/arch.mk
 endif
 
 
-
 #---------------------------------------------------------------------------------
-# get atmosphere git revision information (use repo root so git works when CWD is build/ on another filesystem)
+# get atmosphere git revision information
 #---------------------------------------------------------------------------------
-export ATMOSPHERE_GIT_BRANCH   := $(shell git -C $(ATMOSPHERE_LIBRARIES_DIR) symbolic-ref --short HEAD 2>/dev/null || echo "detached")
+export ATMOSPHERE_GIT_BRANCH   := $(shell git symbolic-ref --short HEAD)
 
-ifeq ($(strip $(shell git -C $(ATMOSPHERE_LIBRARIES_DIR) status --porcelain 2>/dev/null)),)
-export ATMOSPHERE_GIT_REVISION := $(ATMOSPHERE_GIT_BRANCH)-$(shell git -C $(ATMOSPHERE_LIBRARIES_DIR) rev-parse --short HEAD 2>/dev/null || echo "unknown")
+ifeq ($(strip $(shell git status --porcelain 2>/dev/null)),)
+export ATMOSPHERE_GIT_REVISION := $(ATMOSPHERE_GIT_BRANCH)-$(shell git rev-parse --short HEAD)
 else
-export ATMOSPHERE_GIT_REVISION := $(ATMOSPHERE_GIT_BRANCH)-$(shell git -C $(ATMOSPHERE_LIBRARIES_DIR) rev-parse --short HEAD 2>/dev/null || echo "unknown")-dirty
+export ATMOSPHERE_GIT_REVISION := $(ATMOSPHERE_GIT_BRANCH)-$(shell git rev-parse --short HEAD)-dirty
 endif
 
-export ATMOSPHERE_GIT_HASH := $(shell git -C $(ATMOSPHERE_LIBRARIES_DIR) rev-parse --short=16 HEAD 2>/dev/null || echo "0000000000000000")
+export ATMOSPHERE_GIT_HASH := $(shell git rev-parse --short=16 HEAD)
 
 ATMOSPHERE_DEFINES += -DATMOSPHERE_GIT_BRANCH=\"$(ATMOSPHERE_GIT_BRANCH)\" -DATMOSPHERE_GIT_REVISION=\"$(ATMOSPHERE_GIT_REVISION)\" -DATMOSPHERE_GIT_HASH="0x$(ATMOSPHERE_GIT_HASH)"
 
